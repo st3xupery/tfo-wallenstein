@@ -33,20 +33,31 @@ var myIcon = new L.icon({
     iconAnchor: [12, 12],
 });
 
-var _tfoGeoJson = L.geoJSON(tfoGeoJson).addTo(mymap);
-var _tfoGeoJson = L.geoJSON(tfoGeoJsonPoints, {
+var _tfoGeoJson = L.geoJSON(tfoGeoJson, {
+	style: feature => ({color: 'black'})
+}).addTo(mymap);
+
+L.geoJSON(tfoGeoJsonPoints, {
 	pointToLayer: function(feature, latlng) {
 		return L.marker(latlng, {icon: myIcon})
 	}
 }).addTo(mymap);
-var _walGeoJson = L.geoJSON(wal, {
-	style: feature => ({
-		color: `#${Math.floor(Math.random()*16777215).toString(16)}`,
-		weight: 1,
-		dashArray: '10, 3, 2, 3'
-	})
+
+const eqIdToColor = {};
+
+L.geoJSON(ls, {
+	style: feature => {
+		const color = eqIdToColor[feature.properties.equipmentId] = `#${Math.floor(Math.random()*16777215).toString(16)}`
+		return { color, weight: 1, dashArray: '10, 3, 2, 3' }
+	}
 }).bindPopup(function (layer) {
     return layer.feature.properties.equipmentId;
+}).addTo(mymap);
+
+L.geoJSON(pt, {
+	pointToLayer: function(feature, latlng) {
+		return L.circleMarker(latlng, {radius: 1, color: eqIdToColor[feature.properties.equipmentId]})
+	}
 }).addTo(mymap);
 
 mymap.fitBounds(_tfoGeoJson.getBounds(), {animate: true, padding: [10, 10]});
