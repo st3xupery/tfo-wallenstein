@@ -24,11 +24,7 @@ var colorCode = {
 
 var tfoGeoJson = {
 	type: 'FeatureCollection',
-	features: tfo.map(x => ({
-		type: 'Feature',
-		properties: {association: 'tfo'},
-		geometry: x
-	})).concat(efoObhecc)
+	features: fences
 }
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -41,6 +37,9 @@ L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=p
 
 var _tfoGeoJson = L.geoJSON(tfoGeoJson, {
 	style: feature => ({color: colorCode[feature.properties.association], weight: 3})
+}).bindPopup(function (layer) {
+	const properties = layer.feature.properties;
+	return `${properties.association}: ${properties.triggerId}`
 }).addTo(mymap);
 
 const eqIdToColor = {};
