@@ -1,4 +1,20 @@
-var mymap = L.map('mapid').setView([51.505, -0.09], 13)
+const satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGFuaWVsYWxrc25pcyIsImEiOiJMU1Zod0dFIn0.Fwq_Aulbw4iUAZ_9kitpuA', {
+	maxZoom: 17
+});
+
+const streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v9/tiles/256/{z}/{x}/{y}?access_token=pk.eyJ1IjoiZGFuaWVsYWxrc25pcyIsImEiOiJMU1Zod0dFIn0.Fwq_Aulbw4iUAZ_9kitpuA', {
+	maxZoom: 17
+});
+
+const baseMaps = {
+	'Streets': streets,
+	'Satellite+ Streets': satelliteStreets
+};
+
+var mymap = L.map('mapid', {
+	layers: [streets]
+}).setView([51.505, -0.09], 13)
+L.control.layers(baseMaps).addTo(mymap);
 
 var colorCode = {
 	tfo: 'red',
